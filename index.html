@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة قضية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            text-align: right;
+        }
+        header a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+        }
+        header a:hover {
+            background-color: #575757;
+        }
+        form {
+            width: 80%;
+            margin: 0 auto;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="cases.html">عرض القضايا</a>
+    </header>
+
+    <h1>إضافة قضية</h1>
+
+    <form id="caseForm">
+        <label for="client-name">اسم العميل</label>
+        <input type="text" id="client-name" required>
+
+        <label for="client-phone">رقم الهاتف</label>
+        <input type="text" id="client-phone" required>
+
+        <label for="case-details">تفاصيل القضية</label>
+        <textarea id="case-details" required></textarea>
+
+        <label for="session-date">معاد الجلسة</label>
+        <input type="date" id="session-date" required>
+
+        <label for="judgment">الحكم</label>
+        <input type="text" id="judgment" required>
+
+        <label for="case-file">ملف القضية (PDF فقط)</label>
+        <input type="file" id="case-file" name="case-file" accept="application/pdf" required>
+
+        <button type="button" onclick="addCase()">إضافة القضية</button>
+    </form>
+
+    <script>
+        function addCase() {
+            const name = document.getElementById("client-name").value;
+            const phone = document.getElementById("client-phone").value;
+            const details = document.getElementById("case-details").value;
+            const sessionDate = document.getElementById("session-date").value;
+            const judgment = document.getElementById("judgment").value;
+            const fileInput = document.getElementById("case-file");
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileUrl = URL.createObjectURL(file); // إنشاء رابط مؤقت للملف
+
+                const newCase = {
+                    name: name,
+                    phone: phone,
+                    details: details,
+                    sessionDate: sessionDate,
+                    judgment: judgment,
+                    file: fileUrl // تخزين رابط الملف
+                };
+
+                let cases = JSON.parse(localStorage.getItem("cases")) || [];
+                cases.push(newCase);
+                localStorage.setItem("cases", JSON.stringify(cases));
+
+                alert("تم إضافة القضية بنجاح!");
+                document.getElementById("caseForm").reset();
+            } else {
+                alert("يرجى رفع ملف PDF.");
+            }
+        }
+    </script>
+
+</body>
+</html>
